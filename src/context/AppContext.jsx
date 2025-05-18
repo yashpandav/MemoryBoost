@@ -46,7 +46,7 @@ export const AppProvider = ({ children }) => {
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, []); // Run only on mount
+  }, [darkMode]);
 
   // Save to localStorage when data changes
   useEffect(() => {

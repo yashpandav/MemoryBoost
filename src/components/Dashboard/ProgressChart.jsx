@@ -161,7 +161,7 @@ export const ProgressChart = () => {
       ) : (
         <>
           {/* Learning Status Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 transition-all duration-300">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Learning Progress</h2>
             <div className="h-64">
               <Doughnut data={learningData} options={chartOptions} />
@@ -183,7 +183,7 @@ export const ProgressChart = () => {
           </div>
 
           {/* Review Status Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 transition-all duration-300">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Review Status</h2>
             <div className="h-64">
               <Doughnut data={reviewData} options={chartOptions} />
