@@ -15,7 +15,7 @@ export const CardReview = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
   
-  // Get cards due for review
+  // Get cards due for review 
   const dueCards = activeDeckId 
     ? getDeckDueCards(cards, activeDeckId)
     : getTodayCards(cards);
@@ -25,10 +25,24 @@ export const CardReview = () => {
     ? decks.find(d => d.id === activeDeckId)?.name || 'Cards'
     : 'All Decks';
 
+  // Initialize review state when dueCards changes
+  useEffect(() => {
+    // Only reset if we have cards and we're not already in the middle of a review
+    if (dueCards.length > 0 && !reviewComplete) {
+      console.log('Initializing review with cards:', dueCards.length); // Debug log
+      setCurrentCardIndex(0);
+      setShowAnswer(false);
+      setReviewStats({ correct: 0, incorrect: 0 });
+      setTimeLeft(null);
+    }
+  }, [dueCards.length]);
+  
   // Timer effect
   useEffect(() => {
     if (!showAnswer && currentCardIndex < dueCards.length) {
       const currentCard = dueCards[currentCardIndex];
+      if (!currentCard) return;
+
       const nextReview = new Date(currentCard.nextReviewDate);
       const now = new Date();
       const diffSeconds = Math.ceil((nextReview - now) / 1000);
@@ -48,11 +62,26 @@ export const CardReview = () => {
         return () => clearInterval(timer);
       }
     }
-  }, [currentCardIndex, dueCards, showAnswer]);
+  }, [currentCardIndex, showAnswer, dueCards]);
+  
+  // Debug log for current state
+  useEffect(() => {
+    console.log('Current review state:', {
+      currentCardIndex,
+      totalCards: dueCards.length,
+      reviewComplete,
+      reviewStats
+    });
+  }, [currentCardIndex, dueCards.length, reviewComplete, reviewStats]);
   
   // Handle review completion
   useEffect(() => {
     if (dueCards.length === 0 || currentCardIndex >= dueCards.length) {
+      console.log('Marking review as complete:', {
+        currentCardIndex,
+        totalCards: dueCards.length,
+        reviewStats
+      });
       setReviewComplete(true);
       
       if (dueCards.length > 0 && currentCardIndex >= dueCards.length) {
@@ -60,7 +89,7 @@ export const CardReview = () => {
         setTimeout(() => setShowConfetti(false), 5000);
       }
     }
-  }, [currentCardIndex, dueCards.length]);
+  }, [currentCardIndex, dueCards.length, reviewStats]);
   
   // Handle card answer
   const handleAnswer = (knewAnswer) => {
@@ -68,18 +97,29 @@ export const CardReview = () => {
       const currentCard = dueCards[currentCardIndex];
       
       // Update review stats
-      setReviewStats(prev => ({
-        correct: prev.correct + (knewAnswer ? 1 : 0),
-        incorrect: prev.incorrect + (knewAnswer ? 0 : 1),
-      }));
+      setReviewStats(prev => {
+        const newStats = {
+          correct: prev.correct + (knewAnswer ? 1 : 0),
+          incorrect: prev.incorrect + (knewAnswer ? 0 : 1),
+        };
+        console.log('Updated review stats:', newStats); // Debug log
+        return newStats;
+      });
       
       // Update card review data
       reviewCard(currentCard.id, knewAnswer);
       
-      // Move to the next card
-      setCurrentCardIndex(prev => prev + 1);
-      setShowAnswer(false);
-      setTimeLeft(null);
+      // Move to the next card if there are more cards
+      if (currentCardIndex + 1 < dueCards.length) {
+        setCurrentCardIndex(prev => prev + 1);
+        setShowAnswer(false);
+        setTimeLeft(null);
+      } else {
+        // If this was the last card, mark review as complete
+        setReviewComplete(true);
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
+      }
     }
   };
   
@@ -122,7 +162,7 @@ export const CardReview = () => {
   // If review is complete
   if (reviewComplete) {
     const totalCards = reviewStats.correct + reviewStats.incorrect;
-    const correctPercentage = Math.round((reviewStats.correct / totalCards) * 100);
+    const correctPercentage = totalCards > 0 ? Math.round((reviewStats.correct / totalCards) * 100) : 0;
     
     return (
       <div className="max-w-xl mx-auto text-center py-12">
@@ -173,9 +213,27 @@ export const CardReview = () => {
       </div>
     );
   }
-  
+    
   // Review in progress
   const currentCard = dueCards[currentCardIndex];
+  
+  if (!currentCard) {
+    return (
+      <div className="max-w-xl mx-auto text-center py-12">
+        <h2 className="text-2xl font-bold mb-4">No Cards Available</h2>
+        <p className="text-gray-600 dark:text-gray-300 mb-8">
+          There are no cards available for review at this time.
+        </p>
+        <button
+          onClick={exitReview}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+        >
+          Return to {activeDeckId ? 'Deck' : 'Dashboard'}
+        </button>
+      </div>
+    );
+  }
+
   const consecutiveCorrect = currentCard.consecutiveCorrect || 0;
   const isMastered = currentCard.isMastered;
   
