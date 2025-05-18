@@ -13,7 +13,7 @@ export const DeckList = () => {
   };
 
   return (
-    <div className="h-full w-full">
+    <div className="space-y-8">
       <div className="mb-8">
         <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-gray-100">Your Decks</h2>
         <p className="text-gray-600 dark:text-gray-300 text-lg">
@@ -35,8 +35,8 @@ export const DeckList = () => {
           </button>
         </div>
       ) : (
-        <div className="h-[calc(100%-8rem)]">
-          <div className="flex justify-end mb-6">
+        <div className="space-y-6">
+          <div className="flex justify-end">
             <button
               onClick={() => setActiveView('deck-edit')}
               className="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:bg-indigo-200 dark:hover:bg-indigo-900/40"
@@ -46,7 +46,7 @@ export const DeckList = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 h-full overflow-y-auto pb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {decks.map(deck => {
               const deckCards = getDeckCards(cards, deck.id);
               const dueCards = getDeckDueCards(cards, deck.id);
