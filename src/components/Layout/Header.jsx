@@ -1,42 +1,131 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
-import { Brain, List, Home, Sun, Moon } from 'lucide-react';
+import { Brain, List, Home, Sun, Moon, Menu, X } from 'lucide-react';
 
 export const Header = () => {
   const { setActiveView, toggleDarkMode, darkMode } = useAppContext();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-md">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center">
-          <Brain className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
-          <h1 className="ml-2 text-xl font-bold text-gray-900 dark:text-white">MemoryBoost</h1>
+    <header className="relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 dark:from-indigo-500/10 dark:via-purple-500/10 dark:to-pink-500/10" />
+      <div className="relative bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div 
+              className="flex items-center cursor-pointer group" 
+              onClick={() => setActiveView('dashboard')}
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 dark:from-indigo-500/30 dark:to-purple-500/30 rounded-full blur-sm group-hover:blur-md transition-all duration-300" />
+                <Brain className="relative h-8 w-8 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300" />
+              </div>
+              <h1 className="ml-2 text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">MemoryBoost</h1>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              {/* Mobile dark mode toggle */}
+              <button
+                onClick={toggleDarkMode}
+                className="md:hidden group relative flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-white/50 dark:hover:bg-gray-700/50"
+              >
+                <div className="relative w-5 h-5">
+                  <Sun
+                    className={`
+                      absolute inset-0 w-5 h-5 transform transition-all duration-300
+                      ${darkMode ? 'opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100' : 'opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-0'}
+                    `}
+                  />
+                  <Moon
+                    className={`
+                      absolute inset-0 w-5 h-5 transform transition-all duration-300
+                      ${darkMode ? 'opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-0' : 'opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100'}
+                    `}
+                  />
+                </div>
+              </button>
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50 transition-all duration-300"
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex space-x-4">
+              <button 
+                onClick={() => setActiveView('dashboard')}
+                className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-white/50 dark:hover:bg-gray-700/50"
+              >
+                <Home className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
+                <span>Dashboard</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+              
+              <button 
+                onClick={() => setActiveView('deck-list')}
+                className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-white/50 dark:hover:bg-gray-700/50"
+              >
+                <List className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
+                <span>Decks</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+              
+              <button
+                onClick={toggleDarkMode}
+                className="group relative flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-white/50 dark:hover:bg-gray-700/50"
+              >
+                <div className="relative w-5 h-5">
+                  <Sun
+                    className={`
+                      absolute inset-0 w-5 h-5 transform transition-all duration-300
+                      ${darkMode ? 'opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100' : 'opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-0'}
+                    `}
+                  />
+                  <Moon
+                    className={`
+                      absolute inset-0 w-5 h-5 transform transition-all duration-300
+                      ${darkMode ? 'opacity-100 scale-100 group-hover:opacity-0 group-hover:scale-0' : 'opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100'}
+                    `}
+                  />
+                </div>
+              </button>
+            </nav>
+          </div>
         </div>
-        
-        <nav className="flex space-x-4">
-          <button 
-            onClick={() => setActiveView('dashboard')}
-            className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            <Home className="w-5 h-5 mr-1" />
-            <span className="hidden sm:inline">Dashboard</span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveView('deck-list')}
-            className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            <List className="w-5 h-5 mr-1" />
-            <span className="hidden sm:inline">Decks</span>
-          </button>
-          
-          <button 
-            onClick={toggleDarkMode} 
-            className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
-        </nav>
+
+        {/* Mobile Navigation */}
+        <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} transition-all duration-300`}>
+          <div className="absolute inset-x-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700">
+            <nav className="flex flex-col space-y-2 p-4">
+              <button 
+                onClick={() => {
+                  setActiveView('dashboard');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-white/50 dark:hover:bg-gray-700/50"
+              >
+                <Home className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <span>Dashboard</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+              
+              <button 
+                onClick={() => {
+                  setActiveView('deck-list');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-white/50 dark:hover:bg-gray-700/50"
+              >
+                <List className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <span>Decks</span>
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+            </nav>
+          </div>
+        </div>
       </div>
     </header>
   );

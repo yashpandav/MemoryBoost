@@ -3,14 +3,14 @@ import { useAppContext } from '../../context/AppContext';
 import { getTodayCards, getDeckCards, getMasteredCards } from '../../utils/spacedRepetition';
 import { StatsCard } from './StatsCard';
 import { ProgressChart } from './ProgressChart';
-import { Calendar, Brain, CheckCircle2, Clock } from 'lucide-react';
+import { Calendar, Brain, CheckCircle2, Clock, PlusCircle } from 'lucide-react';
 
 export const Dashboard = () => {
   const { decks, cards, stats, setActiveDeckId, setActiveView } = useAppContext();
 
   const todayCards = getTodayCards(cards);
   const masteredCards = getMasteredCards(cards);
-  
+
   const startReview = (deckId) => {
     if (deckId) {
       setActiveDeckId(deckId);
@@ -19,16 +19,16 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">Learning Dashboard</h2>
-        <p className="text-gray-600 dark:text-gray-300">
+    <div className="space-y-8">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold mb-3 text-gray-900 dark:text-gray-100">Learning Dashboard</h2>
+        <p className="text-gray-600 dark:text-gray-300 text-lg">
           Track your progress and review cards due today.
         </p>
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard 
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatsCard
           title="Due Today"
           value={todayCards.length}
           icon={<Clock className="w-6 h-6 text-orange-500" />}
@@ -37,24 +37,24 @@ export const Dashboard = () => {
           onAction={() => todayCards.length > 0 && startReview()}
           color="bg-orange-100 dark:bg-orange-900/20"
         />
-        
-        <StatsCard 
+
+        <StatsCard
           title="Total Cards"
           value={cards.length}
           icon={<Brain className="w-6 h-6 text-indigo-500" />}
           description="Across all decks"
           color="bg-indigo-100 dark:bg-indigo-900/20"
         />
-        
-        <StatsCard 
+
+        <StatsCard
           title="Mastered"
           value={masteredCards.length}
           icon={<CheckCircle2 className="w-6 h-6 text-green-500" />}
           description={`${cards.length ? Math.round((masteredCards.length / cards.length) * 100) : 0}% of all cards`}
           color="bg-green-100 dark:bg-green-900/20"
         />
-        
-        <StatsCard 
+
+        <StatsCard
           title="Study Streak"
           value={stats.streakCount}
           icon={<Calendar className="w-6 h-6 text-purple-500" />}
@@ -62,52 +62,89 @@ export const Dashboard = () => {
           color="bg-purple-100 dark:bg-purple-900/20"
         />
       </div>
-      
-      <div>
-        <h3 className="text-xl font-semibold mb-3">Progress Overview</h3>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <ProgressChart studyData={stats.studyDates} />
-        </div>
+
+      <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:scale-[1.01]">
+        <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100">Progress Overview</h3>
+        <ProgressChart studyData={stats.studyDates} />
       </div>
-      
+
       {decks.length > 0 ? (
         <div>
-          <h3 className="text-xl font-semibold mb-3">Your Decks</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100">Your Decks</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {decks.map(deck => {
               const deckCards = getDeckCards(cards, deck.id);
               const deckDueCards = todayCards.filter(card => card.deckId === deck.id);
-              
+              const masteryPercentage = deckCards.length > 0
+                ? Math.round((getMasteredCards(deckCards).length / deckCards.length) * 100)
+                : 0;
+
               return (
-                <div key={deck.id} className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="p-4">
-                    <h4 className="font-bold text-lg truncate">{deck.name}</h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-2">{deck.description}</p>
-                    <div className="flex justify-between text-sm">
-                      <span>{deckCards.length} cards</span>
-                      <span className="text-orange-500">{deckDueCards.length} due today</span>
+                <div
+                  key={deck.id}
+                  className="group bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden transition-all duration-300 transform hover:scale-[1.02] hover:bg-white/80 dark:hover:bg-gray-800/80"
+                >
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <h4 className="font-bold text-xl text-gray-900 dark:text-gray-100 truncate pr-4">{deck.name}</h4>
+                      <div className="flex-shrink-0">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300">
+                          {deckCards.length} cards
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 line-clamp-2">{deck.description}</p>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 rounded-full bg-orange-500" />
+                          <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                            {deckDueCards.length} due today
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500" />
+                          <span className="text-sm font-medium text-green-600 dark:text-green-400">
+                            {masteryPercentage}% mastered
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${masteryPercentage}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
+
                   <div className="flex divide-x divide-gray-200 dark:divide-gray-700 border-t border-gray-200 dark:border-gray-700">
                     <button
                       onClick={() => {
                         setActiveDeckId(deck.id);
                         setActiveView('card-list');
                       }}
-                      className="flex-1 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      className="flex-1 py-4 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors flex items-center justify-center space-x-2 group-hover:bg-gray-50 dark:group-hover:bg-gray-700/50"
                     >
-                      View Cards
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      <span>View Cards</span>
                     </button>
                     <button
                       onClick={() => deckDueCards.length > 0 && startReview(deck.id)}
                       disabled={deckDueCards.length === 0}
-                      className={`flex-1 py-2 text-sm transition-colors ${
-                        deckDueCards.length > 0
-                          ? 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+                      className={`flex-1 py-4 text-sm font-medium transition-colors flex items-center justify-center space-x-2 ${deckDueCards.length > 0
+                          ? 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/20'
                           : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                      }`}
+                        }`}
                     >
-                      Review Deck
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Review Deck</span>
                     </button>
                   </div>
                 </div>
@@ -116,30 +153,34 @@ export const Dashboard = () => {
           </div>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
-          <h3 className="text-xl font-semibold mb-2">Welcome to MemoryBoost!</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+        <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center transition-all duration-300 hover:scale-[1.01]">
+          <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Welcome to MemoryBoost!</h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
             Get started by creating your first flashcard deck.
           </p>
           <button
             onClick={() => setActiveView('deck-edit')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded transition-colors"
+            className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105"
           >
             Create Your First Deck
           </button>
         </div>
       )}
-      
-      <div className="flex justify-center mt-4">
-        {decks.length > 0 && (
-          <button
-            onClick={() => setActiveView('deck-edit')}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded transition-colors"
-          >
-            Create New Deck
-          </button>
-        )}
-      </div>
+
+      {decks.length > 0 && (
+        <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:scale-[1.01]">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add More Content</h3>
+            <button
+              onClick={() => setActiveView('deck-edit')}
+              className="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:bg-indigo-200 dark:hover:bg-indigo-900/40"
+            >
+              <PlusCircle className="w-5 h-5 mr-2" />
+              <span>Create New Deck</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

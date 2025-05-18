@@ -12,15 +12,20 @@ export const Home = () => {
   const { activeView } = useAppContext();
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-200">
       <Header />
-      <main className="flex-grow container mx-auto p-4 max-w-5xl">
-        {activeView === 'dashboard' && <Dashboard />}
-        {activeView === 'deck-list' && <DeckList />}
-        {activeView === 'deck-edit' && <DeckEditor />}
-        {activeView === 'card-list' && <CardList />}
-        {activeView === 'card-edit' && <CardEditor />}
-        {activeView === 'review' && <CardReview />}
+      <main className="flex-grow w-full">
+        <div className="relative w-full h-full px-6 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-12">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 dark:from-indigo-500/10 dark:via-purple-500/10 dark:to-pink-500/10" />
+          <div className="relative">
+            {activeView === 'dashboard' && <Dashboard />}
+            {activeView === 'deck-list' && <DeckList />}
+            {activeView === 'deck-edit' && <DeckEditor />}
+            {activeView === 'card-list' && <CardList />}
+            {activeView === 'card-edit' && <CardEditor />}
+            {activeView === 'review' && <CardReview />}
+          </div>
+        </div>
       </main>
     </div>
   );

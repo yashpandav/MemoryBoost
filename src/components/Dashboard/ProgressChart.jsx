@@ -148,68 +148,63 @@ export const ProgressChart = () => {
   const learningPercentage = totalCards > 0 ? Math.round((learningChartData.learning / totalCards) * 100) : 0;
   const reviewPercentage = totalCards > 0 ? Math.round((reviewChartData.completedReview / totalCards) * 100) : 0;
   const pendingReviewPercentage = totalCards > 0 ? Math.round((reviewChartData.pendingReview / totalCards) * 100) : 0;
-
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Learning Status Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Learning Progress</h2>
-        <div className="h-64">
-          <Doughnut data={learningData} options={chartOptions} />
-        </div>
-        <div className="mt-6 text-center space-y-2">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg">
-              <p className="font-semibold text-emerald-600 dark:text-emerald-400">Mastered</p>
-              <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{learningChartData.mastered}</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400">{masteryPercentage}%</p>
-            </div>
-            <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg">
-              <p className="font-semibold text-amber-600 dark:text-amber-400">Learning</p>
-              <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">{learningChartData.learning}</p>
-              <p className="text-sm text-amber-600 dark:text-amber-400">{learningPercentage}%</p>
-            </div>
+      {totalCards === 0 ? (
+        <div className="col-span-2 bg-white dark:bg-gray-800 rounded-xl p-6">
+          <div className="text-center py-8">
+            <p className="text-xl font-semibold text-gray-600 dark:text-gray-300">No Cards Created Yet</p>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Create some cards to see your learning progress</p>
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Learning Status Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 transition-all duration-300">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Learning Progress</h2>
+            <div className="h-64">
+              <Doughnut data={learningData} options={chartOptions} />
+            </div>
+            <div className="mt-6 text-center space-y-2">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg">
+                  <p className="font-semibold text-emerald-600 dark:text-emerald-400">Mastered</p>
+                  <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{learningChartData.mastered}</p>
+                  <p className="text-sm text-emerald-600 dark:text-emerald-400">{masteryPercentage}%</p>
+                </div>
+                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg">
+                  <p className="font-semibold text-amber-600 dark:text-amber-400">Learning</p>
+                  <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">{learningChartData.learning}</p>
+                  <p className="text-sm text-amber-600 dark:text-amber-400">{learningPercentage}%</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      {/* Review Status Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Review Status</h2>
-        <div className="h-64">
-          <Doughnut data={reviewData} options={chartOptions} />
-        </div>
-        <div className="mt-6 text-center space-y-2">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-violet-50 dark:bg-violet-900/20 p-4 rounded-lg">
-              <p className="font-semibold text-violet-600 dark:text-violet-400">Due for Review</p>
-              <p className="text-2xl font-bold text-violet-700 dark:text-violet-300">{reviewChartData.pendingReview}</p>
-              <p className="text-sm text-violet-600 dark:text-violet-400">{pendingReviewPercentage}%</p>
+          {/* Review Status Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 transition-all duration-300">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Review Status</h2>
+            <div className="h-64">
+              <Doughnut data={reviewData} options={chartOptions} />
             </div>
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <p className="font-semibold text-blue-600 dark:text-blue-400">Review Completed</p>
-              <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{reviewChartData.completedReview}</p>
-              <p className="text-sm text-blue-600 dark:text-blue-400">{reviewPercentage}%</p>
+            <div className="mt-6 text-center space-y-2">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="bg-violet-50 dark:bg-violet-900/20 p-4 rounded-lg">
+                  <p className="font-semibold text-violet-600 dark:text-violet-400">Due for Review</p>
+                  <p className="text-2xl font-bold text-violet-700 dark:text-violet-300">{reviewChartData.pendingReview}</p>
+                  <p className="text-sm text-violet-600 dark:text-violet-400">{pendingReviewPercentage}%</p>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                  <p className="font-semibold text-blue-600 dark:text-blue-400">Review Completed</p>
+                  <p className="text-2xl font-bold text-blue-700 dark:text-blue-300">{reviewChartData.completedReview}</p>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">{reviewPercentage}%</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Stats Summary */}
-      <div className="md:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-            <p className="text-gray-600 dark:text-gray-300">
-              <span className="font-semibold">Total Cards:</span> {totalCards}
-            </p>
-          </div>
-          <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-            <p className="text-gray-600 dark:text-gray-300">
-              <span className="font-semibold">Current Streak:</span> {stats.streakCount} days
-            </p>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
