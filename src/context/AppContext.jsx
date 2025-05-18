@@ -94,8 +94,8 @@ export const AppProvider = ({ children }) => {
       ...deck
     };
     setDecks([...decks, newDeck]);
-    setActiveDeckId(newDeck.id);
-    setActiveView('card-list');
+    
+    return newDeck.id;
   };
 
   const updateDeck = (id, deckUpdate) => {

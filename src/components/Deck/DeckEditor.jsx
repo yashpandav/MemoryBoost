@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAppContext } from '../../context/AppContext';
+import { BookOpen, ArrowLeft, Save, X } from 'lucide-react';
 
 export const DeckEditor = () => {
-  const { addDeck, updateDeck, decks, activeDeckId, setActiveView } = useAppContext();
+  const { addDeck, updateDeck, decks, activeDeckId, setActiveDeckId, setActiveView } = useAppContext();
   
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [nameError, setNameError] = useState('');
+  const [isNewDeck, setIsNewDeck] = useState(true);
   
   // Load deck if editing existing
   useEffect(() => {
@@ -15,10 +17,13 @@ export const DeckEditor = () => {
       if (deck) {
         setName(deck.name);
         setDescription(deck.description);
+        setIsNewDeck(false);
       }
     } else {
+      // Reset form for new deck
       setName('');
       setDescription('');
+      setIsNewDeck(true);
     }
   }, [activeDeckId, decks]);
   
@@ -42,61 +47,100 @@ export const DeckEditor = () => {
       setActiveView('card-list');
     } else {
       // Create new deck
-      addDeck({ name, description });
+      const newDeckId = addDeck({ name, description });
+      // Navigate to the deck list after creating
+      setActiveDeckId(null); // Reset active deck ID
+      setActiveView('deck-list');
     }
+  };
+
+  const handleCancel = () => {
+    // Clear the active deck ID when canceling
+    setActiveDeckId(null);
+    setActiveView('deck-list');
   };
   
   return (
-    <div className="max-w-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-6">
-        {activeDeckId ? 'Edit Deck' : 'Create New Deck'}
-      </h2>
+    <div className="max-w-2xl mx-auto">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent leading-tight">
+          {isNewDeck ? 'Create New Deck' : 'Edit Deck'}
+        </h2>
+        <p className="text-gray-600 dark:text-gray-300 text-lg">
+          {isNewDeck ? 'Start by creating a new deck for your flashcards.' : 'Update your deck details below.'}
+        </p>
+      </div>
       
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Deck Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-              nameError ? 'border-red-500 dark:border-red-500' : 'border-gray-300 dark:border-gray-600'
-            }`}
-            placeholder="e.g., Spanish Vocabulary"
-          />
-          {nameError && <p className="mt-1 text-sm text-red-500">{nameError}</p>}
+      <form onSubmit={handleSubmit} className="relative overflow-hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200/50 dark:border-gray-700/50">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 dark:from-indigo-500/10 dark:via-purple-500/10 dark:to-pink-500/10 pointer-events-none" />
+        
+        <div className="mb-8">
+          <div className="flex items-center space-x-2 mb-2">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/30 to-purple-500/30 rounded-full blur-sm"></div>
+              <BookOpen className="relative w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <label htmlFor="name" className="text-lg font-medium text-gray-800 dark:text-gray-200">
+              Deck Name
+            </label>
+          </div>
+          <div className="relative">
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={`w-full px-5 py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${
+                nameError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'
+              }`}
+              placeholder="e.g., Spanish Vocabulary"
+            />
+            <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 group-focus-within:w-full"></div>
+          </div>
+          {nameError && (
+            <p className="mt-2 text-sm text-red-500 dark:text-red-400 flex items-center">
+              <span className="w-1.5 h-1.5 bg-red-500 dark:bg-red-400 rounded-full mr-2"></span>
+              {nameError}
+            </p>
+          )}
         </div>
         
-        <div className="mb-6">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <div className="mb-10">
+          <label htmlFor="description" className="block text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
             Description
           </label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            placeholder="Optional description for your deck"
-          />
+          <div className="relative">
+            <textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              className="w-full px-5 py-4 bg-white/70 dark:bg-gray-700/70 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all duration-300"
+              placeholder="Optional description for your deck"
+            />
+            <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 group-focus-within:w-full"></div>
+          </div>
         </div>
         
-        <div className="flex space-x-3">
+        <div className="flex items-center justify-between">
           <button
             type="button"
-            onClick={() => setActiveView('deck-list')}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            onClick={handleCancel}
+            className="group relative inline-flex items-center px-5 py-3 bg-gray-100 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg font-medium overflow-hidden transition-all duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
-            Cancel
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-200/0 via-gray-200/50 to-gray-200/0 dark:from-gray-600/0 dark:via-gray-600/50 dark:to-gray-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            <ArrowLeft className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform duration-300" />
+            <span className="relative">Back to Decks</span>
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+            className="group relative inline-flex items-center px-7 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 dark:from-indigo-500 dark:to-purple-500 dark:hover:from-indigo-600 dark:hover:to-purple-600 text-white font-medium rounded-lg overflow-hidden transition-all duration-300"
           >
-            {activeDeckId ? 'Update Deck' : 'Create Deck'}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            <Save className="w-5 h-5 mr-2 transform group-hover:scale-110 transition-transform duration-300" />
+            <span className="relative transform group-hover:scale-105 transition-transform duration-300">
+              {isNewDeck ? 'Create Deck' : 'Update Deck'}
+            </span>
           </button>
         </div>
       </form>

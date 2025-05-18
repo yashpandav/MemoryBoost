@@ -3,7 +3,7 @@ import { useAppContext } from '../../context/AppContext';
 import { getTodayCards, getDeckCards, getMasteredCards } from '../../utils/spacedRepetition';
 import { StatsCard } from './StatsCard';
 import { ProgressChart } from './ProgressChart';
-import { Calendar, Brain, CheckCircle2, Clock, PlusCircle } from 'lucide-react';
+import { Calendar, Brain, CheckCircle2, Clock, Plus } from 'lucide-react';
 
 export const Dashboard = () => {
   const { decks, cards, stats, setActiveDeckId, setActiveView } = useAppContext();
@@ -16,6 +16,11 @@ export const Dashboard = () => {
       setActiveDeckId(deckId);
     }
     setActiveView('review');
+  };
+
+  const handleCreateNewDeck = () => {
+    setActiveDeckId(null);
+    setActiveView('deck-edit');
   };
 
   return (
@@ -159,10 +164,12 @@ export const Dashboard = () => {
             Get started by creating your first flashcard deck.
           </p>
           <button
-            onClick={() => setActiveView('deck-edit')}
-            className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105"
+            onClick={handleCreateNewDeck}
+            className="group relative inline-flex items-center bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white font-medium py-3 px-6 rounded-lg overflow-hidden transition-all duration-300"
           >
-            Create Your First Deck
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-400/0 via-indigo-400/50 to-indigo-400/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            <Plus className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+            <span className="relative transform group-hover:scale-105 transition-transform duration-300">Create Your First Deck</span>
           </button>
         </div>
       )}
@@ -172,11 +179,12 @@ export const Dashboard = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Add More Content</h3>
             <button
-              onClick={() => setActiveView('deck-edit')}
-              className="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:bg-indigo-200 dark:hover:bg-indigo-900/40"
+              onClick={handleCreateNewDeck}
+              className="group relative inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg font-medium overflow-hidden transition-all duration-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/40"
             >
-              <PlusCircle className="w-5 h-5 mr-2" />
-              <span>Create New Deck</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-indigo-200/50 to-indigo-200/0 dark:from-indigo-600/0 dark:via-indigo-600/50 dark:to-indigo-600/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              <Plus className="w-5 h-5 mr-2 transform group-hover:scale-110 transition-transform duration-300" />
+              <span className="relative">Create New Deck</span>
             </button>
           </div>
         </div>
