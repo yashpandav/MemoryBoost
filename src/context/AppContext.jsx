@@ -36,8 +36,17 @@ export const AppProvider = ({ children }) => {
   const [activeView, setActiveView] = useState('dashboard');
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('flashcards-darkmode');
-    return savedMode ? JSON.parse(savedMode) : false;
+    return savedMode ? JSON.parse(savedMode) : true;
   });
+
+  // Set initial dark mode class
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []); // Run only on mount
 
   // Save to localStorage when data changes
   useEffect(() => {
@@ -54,11 +63,6 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem('flashcards-darkmode', JSON.stringify(darkMode));
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
   }, [darkMode]);
 
   // Check for streak
