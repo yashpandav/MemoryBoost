@@ -51,30 +51,30 @@ export const Header = () => {
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
-            </div>
-
+        </div>
+        
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-4">
-              <button 
-                onClick={() => setActiveView('dashboard')}
+          <button 
+            onClick={() => setActiveView('dashboard')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
-              >
+          >
                 <Home className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
                 <span>Dashboard</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-              
-              <button 
-                onClick={() => setActiveView('deck-list')}
+          </button>
+          
+          <button 
+            onClick={() => setActiveView('deck-list')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
-              >
+          >
                 <List className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
                 <span>Decks</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-              
-              <button
-                onClick={toggleDarkMode}
+          </button>
+          
+          <button 
+            onClick={toggleDarkMode} 
                 className="group relative flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
                 <div className="relative w-5 h-5">
@@ -122,8 +122,8 @@ export const Header = () => {
                 <List className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
                 <span>Decks</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
-              </button>
-            </nav>
+          </button>
+        </nav>
           </div>
         </div>
       </div>
