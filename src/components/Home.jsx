@@ -6,6 +6,7 @@ import { DeckEditor } from './Deck/DeckEditor';
 import { CardList } from './Card/CardList';
 import { CardEditor } from './Card/CardEditor';
 import { CardReview } from './Card/CardReview';
+import { HowToUse } from './Guide/HowToUse';
 import { Header } from './Layout/Header';
 
 export const Home = () => {
@@ -24,6 +25,7 @@ export const Home = () => {
             {activeView === 'card-list' && <CardList />}
             {activeView === 'card-edit' && <CardEditor />}
             {activeView === 'review' && <CardReview />}
+            {activeView === 'how-to-use' && <HowToUse />}
           </div>
         </div>
       </main>
