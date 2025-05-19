@@ -7,30 +7,30 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="relative z-50">
+    <header className="relative z-50 w-full">
       <div className="absolute inset-0 bg-gray-100 dark:bg-gray-900" />
       <div className="relative bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4">
+        <div className="w-full max-w-[2000px] mx-auto px-2 sm:px-4 lg:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div
-              className="flex items-center cursor-pointer group"
+              className="flex items-center cursor-pointer group pl-1 sm:pl-2"
               onClick={() => setActiveView('dashboard')}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 dark:from-indigo-500/30 dark:to-purple-500/30 rounded-full blur-sm group-hover:blur-md transition-all duration-300" />
-                <Brain className="relative h-8 w-8 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300" />
+                <Brain className="relative h-7 w-7 sm:h-8 sm:w-8 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300" />
               </div>
-              <h1 className="ml-2 text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">MemoryBoost</h1>
+              <h1 className="ml-2 text-lg sm:text-xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">MemoryBoost</h1>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-4">
+            <nav className="hidden md:flex items-center space-x-1">
               <button
                 onClick={() => setActiveView('dashboard')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
-                <Home className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
-                <span>Dashboard</span>
+                <Home className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <span className="text-sm sm:text-base font-medium">Dashboard</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
 
@@ -38,8 +38,8 @@ export const Header = () => {
                 onClick={() => setActiveView('deck-list')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
-                <List className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
-                <span>Decks</span>
+                <List className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <span className="text-sm sm:text-base font-medium">Decks</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
 
@@ -47,14 +47,14 @@ export const Header = () => {
                 onClick={() => setActiveView('how-to-use')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
-                <HelpCircle className="w-5 h-5 mr-1 group-hover:scale-110 transition-transform duration-300" />
-                <span>How to Use</span>
+                <HelpCircle className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                <span className="text-sm sm:text-base font-medium">How to Use</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
 
               <button
                 onClick={toggleDarkMode}
-                className="group relative flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                className="group relative flex items-center px-3 py-2 ml-1 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
                 <div className="relative w-5 h-5">
                   <Sun
@@ -74,10 +74,10 @@ export const Header = () => {
             </nav>
 
             {/* Mobile Controls */}
-            <div className="flex md:hidden items-center space-x-2">
+            <div className="flex md:hidden items-center">
               <button
                 onClick={toggleDarkMode}
-                className="group relative flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                className="group relative flex items-center px-2 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
                 <div className="relative w-5 h-5">
                   <Sun
