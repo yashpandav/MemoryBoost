@@ -57,7 +57,7 @@ export const AppProvider = ({ children }) => {
   // Streak Check
   useEffect(() => {
     const today = new Date().toLocaleDateString();
-    
+
     if (stats.lastStudyDate) {
       const lastDate = new Date(stats.lastStudyDate);
       const yesterday = new Date();
@@ -128,7 +128,7 @@ export const AppProvider = ({ children }) => {
     const today = new Date().toISOString();
     const todayStr = new Date().toLocaleDateString();
     const cardToUpdate = cards.find(card => card.id === id);
-    
+
     if (!cardToUpdate) return;
 
     setCards(cards.map(card => {
@@ -141,7 +141,7 @@ export const AppProvider = ({ children }) => {
 
         if (knewAnswer) {
           updatedCard.consecutiveCorrect = (card.consecutiveCorrect || 0) + 1;
-          
+
           if (updatedCard.consecutiveCorrect >= 3) {
             updatedCard.isMastered = true;
             updatedCard.interval = 60; // 60 seconds for mastered cards
@@ -153,11 +153,11 @@ export const AppProvider = ({ children }) => {
           updatedCard.isMastered = false;
           updatedCard.interval = card.isMastered ? 50 : 30; // 50s for failed mastered, 30s for others
         }
-        
+
         const nextDate = new Date();
         nextDate.setSeconds(nextDate.getSeconds() + updatedCard.interval);
         updatedCard.nextReviewDate = nextDate.toISOString();
-        
+
         return updatedCard;
       }
       return card;
@@ -165,18 +165,18 @@ export const AppProvider = ({ children }) => {
 
     // Update deck's last reviewed timestamp
     updateDeck(cardToUpdate.deckId, { lastReviewedAt: today });
-    
+
     // Update stats
     setStats(prev => {
       const studyDates = { ...prev.studyDates };
       studyDates[todayStr] = (studyDates[todayStr] || 0) + 1;
-      
+
       let newStreakCount = prev.streakCount;
       if (prev.lastStudyDate !== todayStr) {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString();
-        
+
         if (prev.lastStudyDate === yesterdayStr || prev.lastStudyDate === null) {
           newStreakCount += 1;
         }

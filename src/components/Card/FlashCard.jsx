@@ -29,10 +29,10 @@ export const FlashCard = ({
       >
         <div
           className={`relative w-full h-full transition-transform duration-300 transform-style-3d ${isFlipping
+            ? 'rotate-y-180'
+            : showAnswer
               ? 'rotate-y-180'
-              : showAnswer
-                ? 'rotate-y-180'
-                : ''
+              : ''
             }`}
         >
           {/* Card Front */}

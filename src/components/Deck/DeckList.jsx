@@ -1,11 +1,11 @@
 import React from 'react';
 import { useAppContext } from '../../context/AppContext';
-import { getDeckCards, getDeckDueCards } from '../../utils/spacedRepetition';
+import { getDeckCards, getDeckDueCards, getMasteredCards } from '../../utils/spacedRepetition';
 import { Plus, Pencil, Trash2, ChevronRight, BookOpen } from 'lucide-react';
 
 export const DeckList = () => {
   const { decks, cards, setActiveDeckId, setActiveView, deleteDeck } = useAppContext();
-  
+
   const confirmDelete = (deckId, deckName) => {
     if (window.confirm(`Are you sure you want to delete the deck "${deckName}" and all its cards?`)) {
       deleteDeck(deckId);
@@ -25,7 +25,7 @@ export const DeckList = () => {
           Manage and review your flashcard decks.
         </p>
       </div>
-      
+
       {decks.length === 0 ? (
         <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center transition-all duration-300">
           <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">No Decks Yet</h3>
@@ -59,9 +59,9 @@ export const DeckList = () => {
               const deckCards = getDeckCards(cards, deck.id);
               const dueCards = getDeckDueCards(cards, deck.id);
               const masteryPercentage = deckCards.length > 0
-                ? Math.round((deckCards.filter(card => card.masteryLevel === 5).length / deckCards.length) * 100)
+                ? Math.round((getMasteredCards(deckCards).length / deckCards.length) * 100)
                 : 0;
-              
+
               return (
                 <div
                   key={deck.id}
@@ -76,7 +76,7 @@ export const DeckList = () => {
                             {deckCards.length} cards
                           </span>
                         </div>
-                        <h3 
+                        <h3
                           className="font-bold text-xl text-gray-900 dark:text-gray-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 cursor-pointer"
                           onClick={() => {
                             setActiveDeckId(deck.id);

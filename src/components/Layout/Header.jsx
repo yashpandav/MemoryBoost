@@ -12,8 +12,8 @@ export const Header = () => {
       <div className="relative bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div 
-              className="flex items-center cursor-pointer group" 
+            <div
+              className="flex items-center cursor-pointer group"
               onClick={() => setActiveView('dashboard')}
             >
               <div className="relative">
@@ -25,7 +25,7 @@ export const Header = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-4">
-              <button 
+              <button
                 onClick={() => setActiveView('dashboard')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
@@ -33,8 +33,8 @@ export const Header = () => {
                 <span>Dashboard</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setActiveView('deck-list')}
                 className="flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 relative group hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
@@ -42,9 +42,9 @@ export const Header = () => {
                 <span>Decks</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
-              
-              <button 
-                onClick={toggleDarkMode} 
+
+              <button
+                onClick={toggleDarkMode}
                 className="group relative flex items-center px-3 py-2 rounded-md text-gray-700 dark:text-gray-200 dark:hover:text-indigo-400 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
               >
                 <div className="relative w-5 h-5">
@@ -99,7 +99,7 @@ export const Header = () => {
         <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} transition-all duration-300`}>
           <div className="absolute inset-x-0 bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700">
             <nav className="flex flex-col space-y-2 p-4">
-              <button 
+              <button
                 onClick={() => {
                   setActiveView('dashboard');
                   setIsMobileMenuOpen(false);
@@ -110,8 +110,8 @@ export const Header = () => {
                 <span>Dashboard</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => {
                   setActiveView('deck-list');
                   setIsMobileMenuOpen(false);

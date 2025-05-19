@@ -63,11 +63,11 @@ export const Dashboard = () => {
           title="Study Streak"
           value={stats.streakCount}
           icon={<Calendar className="w-6 h-6 text-purple-500" />}
-          description="Days in a row" 
+          description="Days in a row"
           color="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30"
         />
       </div>
-    
+
       <div className="rounded-xl p-6 transition-all duration-300">
         <h3 className="text-4xl font-bold mb-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent leading-tight py-1">Progress Overview</h3>
         <ProgressChart studyData={stats.studyDates} />
@@ -142,8 +142,8 @@ export const Dashboard = () => {
                       onClick={() => deckDueCards.length > 0 && startReview(deck.id)}
                       disabled={deckDueCards.length === 0}
                       className={`flex-1 py-4 text-sm font-medium transition-colors flex items-center justify-center space-x-2 ${deckDueCards.length > 0
-                          ? 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
-                          : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                        ? 'text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20'
+                        : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
                         }`}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

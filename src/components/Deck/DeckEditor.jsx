@@ -4,13 +4,13 @@ import { BookOpen, ArrowLeft, Save, X } from 'lucide-react';
 
 export const DeckEditor = () => {
   const { addDeck, updateDeck, decks, activeDeckId, setActiveDeckId, setActiveView } = useAppContext();
-  
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [nameError, setNameError] = useState('');
   const [isNewDeck, setIsNewDeck] = useState(true);
-  
-  // Load deck if editing existing
+
+  // Load deck
   useEffect(() => {
     if (activeDeckId) {
       const deck = decks.find(d => d.id === activeDeckId);
@@ -20,13 +20,13 @@ export const DeckEditor = () => {
         setIsNewDeck(false);
       }
     } else {
-      // Reset form for new deck
+      // new deck
       setName('');
       setDescription('');
       setIsNewDeck(true);
     }
   }, [activeDeckId, decks]);
-  
+
   const validateForm = () => {
     if (!name.trim()) {
       setNameError('Deck name is required');
@@ -35,31 +35,30 @@ export const DeckEditor = () => {
     setNameError('');
     return true;
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     if (activeDeckId) {
-      // Update existing deck
+      // Update deck
       updateDeck(activeDeckId, { name, description });
       setActiveView('card-list');
     } else {
-      // Create new deck
+      // Create deck
       const newDeckId = addDeck({ name, description });
-      // Navigate to the deck list after creating
-      setActiveDeckId(null); // Reset active deck ID
+      setActiveDeckId(null);
       setActiveView('deck-list');
     }
   };
 
   const handleCancel = () => {
-    // Clear the active deck ID when canceling
+    // Clear deck id
     setActiveDeckId(null);
     setActiveView('deck-list');
   };
-  
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6">
       <div className="mb-6 sm:mb-8">
@@ -70,10 +69,10 @@ export const DeckEditor = () => {
           {isNewDeck ? 'Start by creating a new deck for your flashcards.' : 'Update your deck details below.'}
         </p>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="relative overflow-hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 sm:p-8 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200/50 dark:border-gray-700/50">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 dark:from-indigo-500/10 dark:via-purple-500/10 dark:to-pink-500/10 pointer-events-none" />
-        
+
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center space-x-2 mb-2">
             <div className="relative">
@@ -90,9 +89,8 @@ export const DeckEditor = () => {
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${
-                nameError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'
-              }`}
+              className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${nameError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'
+                }`}
               placeholder="e.g., Spanish Vocabulary"
             />
             <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 group-focus-within:w-full"></div>
@@ -104,7 +102,7 @@ export const DeckEditor = () => {
             </p>
           )}
         </div>
-        
+
         <div className="mb-8 sm:mb-10">
           <label htmlFor="description" className="block text-base sm:text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
             Description
