@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  // Load data from localStorage
   const [decks, setDecks] = useState(() => {
     const savedDecks = localStorage.getItem('flashcards-decks');
     return savedDecks ? JSON.parse(savedDecks) : [];
@@ -18,17 +17,13 @@ export const AppProvider = ({ children }) => {
 
   const [stats, setStats] = useState(() => {
     const savedStats = localStorage.getItem('flashcards-stats');
-    if (savedStats) {
-      return JSON.parse(savedStats);
-    } else {
-      return {
-        streakCount: 0,
-        lastStudyDate: null,
-        totalReviews: 0,
-        correctReviews: 0,
-        studyDates: {}
-      };
-    }
+    return savedStats ? JSON.parse(savedStats) : {
+      streakCount: 0,
+      lastStudyDate: null,
+      totalReviews: 0,
+      correctReviews: 0,
+      studyDates: {}
+    };
   });
 
   const [activeDeckId, setActiveDeckId] = useState(null);
@@ -36,19 +31,13 @@ export const AppProvider = ({ children }) => {
   const [activeView, setActiveView] = useState('dashboard');
   const [darkMode, setDarkMode] = useState(() => {
     const savedMode = localStorage.getItem('flashcards-darkmode');
-    return savedMode ? JSON.parse(savedMode) : true;
+    return savedMode ? JSON.parse(savedMode) : false;
   });
 
-  // Set initial dark mode class
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
-  // Save to localStorage when data changes
   useEffect(() => {
     localStorage.setItem('flashcards-decks', JSON.stringify(decks));
   }, [decks]);
@@ -65,7 +54,7 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('flashcards-darkmode', JSON.stringify(darkMode));
   }, [darkMode]);
 
-  // Check for streak
+  // Streak Check
   useEffect(() => {
     const today = new Date().toLocaleDateString();
     
@@ -73,19 +62,15 @@ export const AppProvider = ({ children }) => {
       const lastDate = new Date(stats.lastStudyDate);
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
-      
+
       if (lastDate.toLocaleDateString() !== yesterday.toLocaleDateString() &&
-          lastDate.toLocaleDateString() !== today &&
-          getTodayCards(cards).length > 0) {
-        setStats(prev => ({
-          ...prev,
-          streakCount: 0
-        }));
+        lastDate.toLocaleDateString() !== today &&
+        getTodayCards(cards).length > 0) {
+        setStats(prev => ({ ...prev, streakCount: 0 }));
       }
     }
   }, [cards, stats.lastStudyDate]);
 
-  // CRUD operations for decks
   const addDeck = (deck) => {
     const newDeck = {
       id: Date.now().toString(),
@@ -94,12 +79,11 @@ export const AppProvider = ({ children }) => {
       ...deck
     };
     setDecks([...decks, newDeck]);
-    
     return newDeck.id;
   };
 
   const updateDeck = (id, deckUpdate) => {
-    setDecks(decks.map(deck => 
+    setDecks(decks.map(deck =>
       deck.id === id ? { ...deck, ...deckUpdate } : deck
     ));
   };
@@ -113,7 +97,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // CRUD operations for cards
   const addCard = (card) => {
     const newCard = {
       id: Date.now().toString(),
@@ -129,7 +112,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const updateCard = (id, cardUpdate) => {
-    setCards(cards.map(card => 
+    setCards(cards.map(card =>
       card.id === id ? { ...card, ...cardUpdate } : card
     ));
   };
@@ -141,11 +124,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Review functionality
   const reviewCard = (id, knewAnswer) => {
     const today = new Date().toISOString();
     const todayStr = new Date().toLocaleDateString();
-    
+
     setCards(cards.map(card => {
       if (card.id === id) {
         const updatedCard = {
@@ -155,7 +137,6 @@ export const AppProvider = ({ children }) => {
         };
 
         if (knewAnswer) {
-          // Correct answer
           updatedCard.consecutiveCorrect = (card.consecutiveCorrect || 0) + 1;
           
           // Check for mastery
@@ -166,41 +147,40 @@ export const AppProvider = ({ children }) => {
             updatedCard.interval = 40; // 40 seconds for correct answers
           }
         } else {
-          // Incorrect answer
           updatedCard.consecutiveCorrect = 0;
           updatedCard.isMastered = false;
           updatedCard.interval = card.isMastered ? 50 : 30; // 50s for failed mastered, 30s for others
         }
-        
+
         const nextDate = new Date();
         nextDate.setSeconds(nextDate.getSeconds() + updatedCard.interval);
         updatedCard.nextReviewDate = nextDate.toISOString();
-        
+
         return updatedCard;
       }
       return card;
     }));
-    
+
     const cardToUpdate = cards.find(card => card.id === id);
     if (cardToUpdate) {
       updateDeck(cardToUpdate.deckId, { lastReviewedAt: today });
     }
-    
+
     setStats(prev => {
       const studyDates = { ...prev.studyDates };
       studyDates[todayStr] = (studyDates[todayStr] || 0) + 1;
-      
+
       let newStreakCount = prev.streakCount;
       if (prev.lastStudyDate !== todayStr) {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString();
-        
+
         if (prev.lastStudyDate === yesterdayStr || prev.lastStudyDate === null) {
           newStreakCount += 1;
         }
       }
-      
+
       return {
         ...prev,
         lastStudyDate: todayStr,
