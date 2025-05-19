@@ -127,6 +127,9 @@ export const AppProvider = ({ children }) => {
   const reviewCard = (id, knewAnswer) => {
     const today = new Date().toISOString();
     const todayStr = new Date().toLocaleDateString();
+    const cardToUpdate = cards.find(card => card.id === id);
+    
+    if (!cardToUpdate) return;
 
     setCards(cards.map(card => {
       if (card.id === id) {
@@ -139,7 +142,6 @@ export const AppProvider = ({ children }) => {
         if (knewAnswer) {
           updatedCard.consecutiveCorrect = (card.consecutiveCorrect || 0) + 1;
           
-          // Check for mastery
           if (updatedCard.consecutiveCorrect >= 3) {
             updatedCard.isMastered = true;
             updatedCard.interval = 60; // 60 seconds for mastered cards
@@ -151,31 +153,30 @@ export const AppProvider = ({ children }) => {
           updatedCard.isMastered = false;
           updatedCard.interval = card.isMastered ? 50 : 30; // 50s for failed mastered, 30s for others
         }
-
+        
         const nextDate = new Date();
         nextDate.setSeconds(nextDate.getSeconds() + updatedCard.interval);
         updatedCard.nextReviewDate = nextDate.toISOString();
-
+        
         return updatedCard;
       }
       return card;
     }));
 
-    const cardToUpdate = cards.find(card => card.id === id);
-    if (cardToUpdate) {
-      updateDeck(cardToUpdate.deckId, { lastReviewedAt: today });
-    }
-
+    // Update deck's last reviewed timestamp
+    updateDeck(cardToUpdate.deckId, { lastReviewedAt: today });
+    
+    // Update stats
     setStats(prev => {
       const studyDates = { ...prev.studyDates };
       studyDates[todayStr] = (studyDates[todayStr] || 0) + 1;
-
+      
       let newStreakCount = prev.streakCount;
       if (prev.lastStudyDate !== todayStr) {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString();
-
+        
         if (prev.lastStudyDate === yesterdayStr || prev.lastStudyDate === null) {
           newStreakCount += 1;
         }
@@ -190,6 +191,13 @@ export const AppProvider = ({ children }) => {
         studyDates
       };
     });
+
+    // Check if there are more cards to review in the current deck
+    const remainingCards = getTodayCards(cards, cardToUpdate.deckId);
+    if (remainingCards.length === 0) {
+      // If no more cards to review in current deck, switch to deck list
+      setActiveView('deck-list');
+    }
   };
 
   const toggleDarkMode = () => {

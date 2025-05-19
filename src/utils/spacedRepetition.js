@@ -16,17 +16,17 @@ const formatDate = (date) => {
 const getCurrentTime = () => new Date();
 
 // Get all cards due for review now
-export const getTodayCards = (cards) => {
+export const getTodayCards = (cards, deckId = null) => {
     const now = getCurrentTime();
-    return cards.filter((card) => new Date(card.nextReviewDate) <= now);
+    return cards.filter((card) => {
+        const isDue = new Date(card.nextReviewDate) <= now;
+        return deckId ? (card.deckId === deckId && isDue) : isDue;
+    });
 };
 
 // Get all cards due for a specific deck
 export const getDeckDueCards = (cards, deckId) => {
-    const now = getCurrentTime();
-    return cards.filter(
-        (card) => card.deckId === deckId && new Date(card.nextReviewDate) <= now
-    );
+    return getTodayCards(cards, deckId);
 };
 
 // Get cards for a specific deck
@@ -35,13 +35,15 @@ export const getDeckCards = (cards, deckId) => {
 };
 
 // Get mastered cards
-export const getMasteredCards = (cards) => {
-    return cards.filter((card) => card.isMastered);
+export const getMasteredCards = (cards, deckId = null) => {
+    return cards.filter((card) => {
+        return deckId ? (card.deckId === deckId && card.isMastered) : card.isMastered;
+    });
 };
 
 // Calculate mastery percentage for a deck
 export const getDeckMasteryPercentage = (cards, deckId) => {
-    const deckCards = cards.filter((card) => card.deckId === deckId);
+    const deckCards = getDeckCards(cards, deckId);
     if (deckCards.length === 0) return 0;
 
     const masteredCards = deckCards.filter((card) => card.isMastered);
@@ -51,7 +53,7 @@ export const getDeckMasteryPercentage = (cards, deckId) => {
 // Calculate overall mastery percentage
 export const getOverallMasteryPercentage = (cards) => {
     if (cards.length === 0) return 0;
-    const masteredCards = cards.filter((card) => card.isMastered);
+    const masteredCards = getMasteredCards(cards);
     return Math.round((masteredCards.length / cards.length) * 100);
 };
 
