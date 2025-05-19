@@ -132,6 +132,16 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 - **Mobile Friendly:** Responsive layouts for all devices.
 - **Motivational Feedback:** Progress bars, streaks, and (planned) confetti for milestones.
 
+![Screenshot_19-5-2025_112232_memory-boost vercel app](https://github.com/user-attachments/assets/caade2ca-64a7-4683-ab2f-e048ea0702c8)
+![Screenshot_19-5-2025_112946_memory-boost vercel app](https://github.com/user-attachments/assets/9f86ab6e-bc21-4526-ad81-7e5229a91324)
+![Screenshot_19-5-2025_112911_memory-boost vercel app](https://github.com/user-attachments/assets/b9ea676a-e497-4495-86a3-e3d70d0a46dd)
+![Screenshot_19-5-2025_112618_memory-boost vercel app](https://github.com/user-attachments/assets/7cd27e07-84c4-4658-a955-3289d6101dfa)
+![Screenshot_19-5-2025_112357_memory-boost vercel app](https://github.com/user-attachments/assets/6443d22c-1c65-4205-90ff-495b03517919)
+![Screenshot_19-5-2025_112322_memory-boost vercel app](https://github.com/user-attachments/assets/75737c18-6cb9-4c91-8f9b-cd3769e84d34)
+![Screenshot_19-5-2025_112259_memory-boost vercel app](https://github.com/user-attachments/assets/73b1d93d-4385-4837-9747-bc302636c2c3)
+![Screenshot_19-5-2025_112248_memory-boost vercel app](https://github.com/user-attachments/assets/2f5391c7-660d-499b-a483-25ae4a3595ca)
+
+
 ## 📚 Data Models
 
 - **Deck**
