@@ -4,13 +4,13 @@ import { ArrowLeft, Save, BookOpen, CheckCircle2 } from 'lucide-react';
 
 export const CardEditor = () => {
   const { addCard, updateCard, cards, activeDeckId, activeCardId, setActiveView } = useAppContext();
-  
+
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [frontError, setFrontError] = useState('');
   const [backError, setBackError] = useState('');
   const [isNewCard, setIsNewCard] = useState(true);
-  
+
   useEffect(() => {
     if (activeCardId) {
       const card = cards.find(c => c.id === activeCardId);
@@ -25,54 +25,48 @@ export const CardEditor = () => {
       setIsNewCard(true);
     }
   }, [activeCardId, cards]);
-  
+
   const validateForm = () => {
     let isValid = true;
-    
     if (!front.trim()) {
       setFrontError('Front side is required');
       isValid = false;
     } else {
       setFrontError('');
     }
-    
     if (!back.trim()) {
       setBackError('Back side is required');
       isValid = false;
     } else {
       setBackError('');
     }
-    
     return isValid;
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
     if (activeCardId) {
       updateCard(activeCardId, { front, back });
     } else if (activeDeckId) {
-      addCard({ 
+      addCard({
         deckId: activeDeckId,
-        front, 
+        front,
         back
       });
     }
-    
     setActiveView('card-list');
   };
 
   const handleCancel = () => {
     setActiveView('card-list');
   };
-  
+
   if (!activeDeckId) {
     setActiveView('deck-list');
     return null;
   }
-  
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6">
       <div className="mb-6 sm:mb-8">
@@ -83,10 +77,8 @@ export const CardEditor = () => {
           {isNewCard ? 'Add a new flashcard to your deck.' : 'Update your flashcard details below.'}
         </p>
       </div>
-      
       <form onSubmit={handleSubmit} className="relative overflow-hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 sm:p-8 transition-all duration-300 shadow-lg hover:shadow-xl border border-gray-200/50 dark:border-gray-700/50">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 dark:from-indigo-500/10 dark:via-purple-500/10 dark:to-pink-500/10 pointer-events-none" />
-        
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center space-x-2 mb-2">
             <div className="relative">
@@ -103,9 +95,7 @@ export const CardEditor = () => {
               value={front}
               onChange={(e) => setFront(e.target.value)}
               rows={3}
-              className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${
-                frontError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'
-              }`}
+              className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${frontError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'}`}
               placeholder="e.g., What is the capital of France?"
             />
             <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 group-focus-within:w-full"></div>
@@ -117,7 +107,6 @@ export const CardEditor = () => {
             </p>
           )}
         </div>
-        
         <div className="mb-8 sm:mb-10">
           <div className="flex items-center space-x-2 mb-2">
             <div className="relative">
@@ -134,9 +123,7 @@ export const CardEditor = () => {
               value={back}
               onChange={(e) => setBack(e.target.value)}
               rows={3}
-              className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${
-                backError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'
-              }`}
+              className={`w-full px-4 sm:px-5 py-3 sm:py-4 bg-white/70 dark:bg-gray-700/70 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:border-gray-600 dark:text-white transition-all duration-300 ${backError ? 'border-red-500 dark:border-red-500' : 'border-gray-200 dark:border-gray-600'}`}
               placeholder="e.g., Paris"
             />
             <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-500 group-focus-within:w-full"></div>
@@ -148,7 +135,6 @@ export const CardEditor = () => {
             </p>
           )}
         </div>
-
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
           <button
             type="button"

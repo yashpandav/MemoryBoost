@@ -1,34 +1,33 @@
 import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { getDeckCards, getDeckDueCards, getCardStatus, getCardStatusColor, getNextReviewDateString } from '../../utils/spacedRepetition';
-import { Plus, Filter, Edit, Trash2, Play, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, Play, ArrowLeft } from 'lucide-react';
 
 export const CardList = () => {
   const { cards, decks, activeDeckId, setActiveCardId, setActiveView, deleteCard } = useAppContext();
-  
   const [filter, setFilter] = useState('all');
-  
+
   if (!activeDeckId) {
     setActiveView('deck-list');
     return null;
   }
-  
+
   const deck = decks.find(d => d.id === activeDeckId);
   if (!deck) {
     setActiveView('deck-list');
     return null;
   }
-  
+
   const deckCards = getDeckCards(cards, activeDeckId);
   const dueCards = getDeckDueCards(cards, activeDeckId);
-  
+
   let filteredCards = deckCards;
   if (filter === 'due') {
     filteredCards = dueCards;
   } else if (filter !== 'all') {
     filteredCards = deckCards.filter(card => getCardStatus(card).toLowerCase() === filter);
   }
-  
+
   const confirmDelete = (cardId) => {
     if (window.confirm('Are you sure you want to delete this card?')) {
       deleteCard(cardId);
@@ -40,7 +39,7 @@ export const CardList = () => {
       setActiveView('review');
     }
   };
-  
+
   return (
     <div className="space-y-6 px-4 sm:px-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -50,7 +49,6 @@ export const CardList = () => {
           </h2>
           <p className="text-gray-700 dark:text-gray-300 text-base sm:text-lg">{deck.description}</p>
         </div>
-        
         <div className="flex flex-wrap gap-2">
           {dueCards.length > 0 && (
             <button
@@ -64,7 +62,6 @@ export const CardList = () => {
               </span>
             </button>
           )}
-
           <button
             onClick={() => {
               setActiveCardId(null);
@@ -78,7 +75,6 @@ export const CardList = () => {
           </button>
         </div>
       </div>
-      
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filter:</span>
         <div className="flex flex-wrap gap-2">
@@ -86,18 +82,16 @@ export const CardList = () => {
             <button
               key={option}
               onClick={() => setFilter(option)}
-              className={`text-sm px-3 py-1.5 rounded-full capitalize transition-all duration-300 ${
-                filter === option
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-sm'
-                  : 'bg-white dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 shadow-sm'
-              }`}
+              className={`text-sm px-3 py-1.5 rounded-full capitalize transition-all duration-300 ${filter === option
+                ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-sm'
+                : 'bg-white dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 shadow-sm'
+                }`}
             >
               {option}
             </button>
           ))}
         </div>
       </div>
-
       {filteredCards.length === 0 ? (
         <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 text-center transition-all duration-300 shadow-sm">
           {deckCards.length === 0 ? (
@@ -133,10 +127,9 @@ export const CardList = () => {
             const status = getCardStatus(card);
             const statusColor = getCardStatusColor(card);
             const nextReview = getNextReviewDateString(card);
-            
             return (
-              <div 
-                key={card.id} 
+              <div
+                key={card.id}
                 className="group bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-md shadow-sm flex flex-col"
               >
                 <div className="p-6 flex-1 flex flex-col">
@@ -146,15 +139,12 @@ export const CardList = () => {
                       {status}
                     </span>
                   </div>
-                  
                   <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-1">{card.back}</p>
-                  
                   <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         Next review: {nextReview}
                       </span>
-                      
                       <div className="flex space-x-2">
                         <button
                           onClick={() => {
@@ -182,7 +172,6 @@ export const CardList = () => {
           })}
         </div>
       )}
-
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 pt-4">
         <button
           onClick={() => setActiveView('deck-list')}
@@ -191,7 +180,6 @@ export const CardList = () => {
           <ArrowLeft className="w-5 h-5 mr-2 transform group-hover:-translate-x-1 transition-transform duration-300" />
           <span className="relative">Back to Decks</span>
         </button>
-        
         <div className="text-sm text-gray-500 dark:text-gray-400">
           Showing {filteredCards.length} of {deckCards.length} cards
         </div>

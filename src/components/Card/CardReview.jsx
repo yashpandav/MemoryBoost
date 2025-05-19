@@ -149,11 +149,8 @@ export const CardReview = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent leading-tight">
-            Reviewing {deckName}
+            Review Your Card
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Card {currentCardIndex + 1} of {dueCards.length}
-          </p>
         </div>
 
         <div className="flex items-center space-x-4">

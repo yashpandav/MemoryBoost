@@ -61,14 +61,20 @@ export const getOverallMasteryPercentage = (cards) => {
 export const getNextReviewDateString = (card) => {
     const nextReview = new Date(card.nextReviewDate);
     const now = getCurrentTime();
-    
     const diffTime = nextReview.getTime() - now.getTime();
     const diffSeconds = Math.ceil(diffTime / 1000);
-    
-    if (diffSeconds < 0) return "Overdue";
+    if (diffSeconds < 0) {
+        const overdueSeconds = Math.abs(diffSeconds);
+        if (overdueSeconds < 60) return `Overdue by ${overdueSeconds} seconds`;
+        if (overdueSeconds < 3600) return `Overdue by ${Math.ceil(overdueSeconds / 60)} minutes`;
+        if (overdueSeconds < 86400) return `Overdue by ${Math.ceil(overdueSeconds / 3600)} hours`;
+        return `Overdue by ${Math.ceil(overdueSeconds / 86400)} days`;
+    }
     if (diffSeconds === 0) return "Now";
     if (diffSeconds < 60) return `In ${diffSeconds} seconds`;
-    return `In ${Math.ceil(diffSeconds / 60)} minutes`;
+    if (diffSeconds < 3600) return `In ${Math.ceil(diffSeconds / 60)} minutes`;
+    if (diffSeconds < 86400) return `In ${Math.ceil(diffSeconds / 3600)} hours`;
+    return `In ${Math.ceil(diffSeconds / 86400)} days`;
 };
 
 // Get card status text
@@ -111,7 +117,7 @@ export const updateCardAfterReview = (card, knewAnswer) => {
     if (knewAnswer) {
         // Correct answer
         newCard.consecutiveCorrect = (card.consecutiveCorrect || 0) + 1;
-        
+
         // Check for mastery
         if (newCard.consecutiveCorrect >= MASTERY_THRESHOLD) {
             newCard.isMastered = true;

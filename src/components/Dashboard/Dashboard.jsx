@@ -40,7 +40,7 @@ export const Dashboard = () => {
           description="Cards to review"
           actionLabel={todayCards.length > 0 ? "Review Now" : undefined}
           onAction={() => todayCards.length > 0 && startReview()}
-          color="bg-orange-100 dark:bg-orange-900/20"
+          color="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30"
         />
 
         <StatsCard
@@ -48,7 +48,7 @@ export const Dashboard = () => {
           value={cards.length}
           icon={<Brain className="w-6 h-6 text-indigo-500" />}
           description="Across all decks"
-          color="bg-indigo-100 dark:bg-indigo-900/20"
+          color="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30"
         />
 
         <StatsCard
@@ -56,15 +56,15 @@ export const Dashboard = () => {
           value={masteredCards.length}
           icon={<CheckCircle2 className="w-6 h-6 text-green-500" />}
           description={`${cards.length ? Math.round((masteredCards.length / cards.length) * 100) : 0}% of all cards`}
-          color="bg-green-100 dark:bg-green-900/20"
+          color="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30"
         />
 
         <StatsCard
           title="Study Streak"
           value={stats.streakCount}
           icon={<Calendar className="w-6 h-6 text-purple-500" />}
-          description="Days in a row"
-          color="bg-purple-100 dark:bg-purple-900/20"
+          description="Days in a row" 
+          color="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30"
         />
       </div>
     
