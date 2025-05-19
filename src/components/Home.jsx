@@ -18,12 +18,12 @@ export const Home = () => {
         <div className="relative w-full min-h-[calc(100vh-4rem)] px-6 sm:px-8 lg:px-12 py-8 sm:py-10 lg:py-12">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 dark:from-indigo-500/10 dark:via-purple-500/10 dark:to-pink-500/10" />
           <div className="relative h-full">
-            {activeView === 'dashboard' && <Dashboard />}
-            {activeView === 'deck-list' && <DeckList />}
-            {activeView === 'deck-edit' && <DeckEditor />}
-            {activeView === 'card-list' && <CardList />}
-            {activeView === 'card-edit' && <CardEditor />}
-            {activeView === 'review' && <CardReview />}
+          {activeView === 'dashboard' && <Dashboard />}
+          {activeView === 'deck-list' && <DeckList />}
+          {activeView === 'deck-edit' && <DeckEditor />}
+          {activeView === 'card-list' && <CardList />}
+          {activeView === 'card-edit' && <CardEditor />}
+          {activeView === 'review' && <CardReview />}
           </div>
         </div>
       </main>
