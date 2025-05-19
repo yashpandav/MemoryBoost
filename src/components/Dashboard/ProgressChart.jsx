@@ -7,7 +7,7 @@ import {
   Legend
 } from 'chart.js';
 import { useAppContext } from '../../context/AppContext';
-import { getTodayCards, getCardStatus, getNextReviewDateString } from '../../utils/spacedRepetition';
+import { getTodayCards, getCardStatus } from '../../utils/spacedRepetition';
 
 // Register ChartJS components
 ChartJS.register(
@@ -17,17 +17,18 @@ ChartJS.register(
 );
 
 export const ProgressChart = () => {
-  const { cards, stats } = useAppContext();
+  const { cards } = useAppContext();
   const [learningChartData, setLearningChartData] = useState({
     mastered: 0,
-    learning: 0
+    learning: 0,
+    new: 0
   });
   const [reviewChartData, setReviewChartData] = useState({
     pendingReview: 0,
     completedReview: 0
   });
 
-  // Update chart data whenever cards or stats change
+  // Update chart data whenever cards change
   useEffect(() => {
     // Categorize cards based on their status
     const cardCategories = cards.reduce((acc, card) => {
@@ -39,11 +40,14 @@ export const ProgressChart = () => {
         case 'Learning':
           acc.learning++;
           break;
+        case 'New':
+          acc.new++;
+          break;
         default:
           break;
       }
       return acc;
-    }, { mastered: 0, learning: 0 });
+    }, { mastered: 0, learning: 0, new: 0 });
 
     // Get cards due for review using the spaced repetition utility
     const dueCards = getTodayCards(cards);
@@ -54,24 +58,22 @@ export const ProgressChart = () => {
 
     setLearningChartData(cardCategories);
     setReviewChartData(reviewCategories);
-
-    // Debug log
-    console.log('Learning Categories:', cardCategories);
-    console.log('Review Categories:', reviewCategories);
   }, [cards]);
 
   const learningData = {
-    labels: ['Mastered', 'Learning'],
+    labels: ['Mastered', 'Learning', 'New'],
     datasets: [
       {
-        data: [learningChartData.mastered, learningChartData.learning],
+        data: [learningChartData.mastered, learningChartData.learning, learningChartData.new],
         backgroundColor: [
           'rgba(16, 185, 129, 0.8)',  // Emerald green for mastered
           'rgba(245, 158, 11, 0.8)',  // Amber for learning
+          'rgba(20, 184, 166, 0.8)',  // Teal for new
         ],
         borderColor: [
           'rgba(16, 185, 129, 1)',
           'rgba(245, 158, 11, 1)',
+          'rgba(20, 184, 166, 1)',
         ],
         borderWidth: 2,
         hoverOffset: 4,
@@ -126,7 +128,7 @@ export const ProgressChart = () => {
           size: 14,
         },
         callbacks: {
-          label: function(context) {
+          label: function (context) {
             const label = context.label || '';
             const value = context.raw || 0;
             const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -146,28 +148,30 @@ export const ProgressChart = () => {
   const totalCards = cards.length;
   const masteryPercentage = totalCards > 0 ? Math.round((learningChartData.mastered / totalCards) * 100) : 0;
   const learningPercentage = totalCards > 0 ? Math.round((learningChartData.learning / totalCards) * 100) : 0;
+  const newPercentage = totalCards > 0 ? Math.round((learningChartData.new / totalCards) * 100) : 0;
   const reviewPercentage = totalCards > 0 ? Math.round((reviewChartData.completedReview / totalCards) * 100) : 0;
   const pendingReviewPercentage = totalCards > 0 ? Math.round((reviewChartData.pendingReview / totalCards) * 100) : 0;
 
+  if (totalCards === 0) {
+    return (
+      <div className="col-span-2 bg-white dark:bg-gray-800 rounded-xl p-6">
+        <div className="text-center py-8">
+          <p className="text-xl font-semibold text-gray-600 dark:text-gray-300">No Cards Created Yet</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">Create some cards to see your learning progress</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {totalCards === 0 ? (
-        <div className="col-span-2 bg-white dark:bg-gray-800 rounded-xl p-6">
-          <div className="text-center py-8">
-            <p className="text-xl font-semibold text-gray-600 dark:text-gray-300">No Cards Created Yet</p>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Create some cards to see your learning progress</p>
-          </div>
-        </div>
-      ) : (
-        <>
-      {/* Learning Status Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Learning Progress</h2>
         <div className="h-64">
           <Doughnut data={learningData} options={chartOptions} />
         </div>
         <div className="mt-6 text-center space-y-2">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-3 gap-4">
             <div className="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-lg">
               <p className="font-semibold text-emerald-600 dark:text-emerald-400">Mastered</p>
               <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{learningChartData.mastered}</p>
@@ -178,12 +182,19 @@ export const ProgressChart = () => {
               <p className="text-2xl font-bold text-amber-700 dark:text-amber-300">{learningChartData.learning}</p>
               <p className="text-sm text-amber-600 dark:text-amber-400">{learningPercentage}%</p>
             </div>
+            <div className="bg-teal-50 dark:bg-teal-900/20 p-4 rounded-lg relative group">
+              <div className="absolute inset-0 bg-teal-100 dark:bg-teal-800/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative">
+                <p className="font-semibold text-teal-600 dark:text-teal-400">New</p>
+                <p className="text-2xl font-bold text-teal-700 dark:text-teal-300">{learningChartData.new}</p>
+                <p className="text-sm text-teal-600 dark:text-teal-400">{newPercentage}%</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Review Status Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
         <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-6">Review Status</h2>
         <div className="h-64">
           <Doughnut data={reviewData} options={chartOptions} />
@@ -203,8 +214,6 @@ export const ProgressChart = () => {
           </div>
         </div>
       </div>
-        </>
-      )}
     </div>
   );
 };
